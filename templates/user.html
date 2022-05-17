@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h2>{{ user["username"] }}</h2>
+
+<div class="wrapping_list">
+    <ul class="wrapping_list">
+        {%- for proj in user["projects"] -%}
+        <li class="wrapping_list">
+            <a href="{{ proj['url'] }}">
+                <p>{{ proj["name"] }}</p>
+            </a>
+        </li>
+        {%- endfor -%}
+    </ul>
+</div>
+
+
+{% endblock %}

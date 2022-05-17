@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h1>{{ proj["name"] }}</h1>
+
+<ul class="nav nav-pills">
+    {%- for tool, tool_info in proj['tools'].items() -%}
+        {%- if tool_info|length == 1 -%}
+            <li class="nav-item">
+                <a class="nav-link 
+                    {% if tool_info[0]['mount_point'] == sub_name %}active{% endif %}" 
+                    href="{{ tool_info[0]['url'] }}">
+                    {{ tool_info[0]['mount_label'] }}
+                </a>
+            </li>
+        {%- else -%}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">{{ tool_info[0]['tool_label'] }}</a>
+                <ul class="dropdown-menu">
+                    {%- for sub_info in tool_info -%}
+                        <li>
+                            <a class="dropdown-item
+                            {% if sub_info['mount_point'] == sub_name %}active{% endif %}" 
+                            href="{{ sub_info['url'] }}">{{ sub_info['mount_label']}}</a>
+                        </li>
+                    {%- endfor -%}
+                </ul>
+            </li>
+        {%- endif -%}
+    {%- endfor -%}
+</ul>
+
+{% block proj_content %}
+{% endblock %}
+
+{% endblock %}
