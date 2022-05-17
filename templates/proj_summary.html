@@ -2,8 +2,44 @@
 
 {% block proj_content %}
 
-<!-- {{ proj }} -->
+<div class="col-lg-8">
+    <article>
+        <section class="mb-5">
+            {%- for desc in sub["short_description"] -%}
+            <p class="fs-5 mb-4">{{ desc }}</p>
+            {%- endfor -%}
+        </section>
+    </article>
+</div>
+<div class="col-lg-4">
+    {%- if recent_activity -%}
+    <div class="card mb-4">
+        <div class="card-header">Recent Acitivty</div>
+        <div class="card-body">
+            <ul class="list-unstyled mb-0">
+            {%- for act in recent_activity['timeline'][:10] -%}
+                <li>
+                    <a class="text-decoration-none text-primary" href="{{ act['actor']['activity_url'] }}">{{ act['actor']['activity_name'] }}</a> 
+                    {{ act['verb'] }} 
+                    <a class="text-decoration-none text-primary" href="{{ act['obj']['activity_url'] }}">{{ act['obj']['activity_name'] }}</a>
+                </li>
+            {%- endfor -%}
+            </ul>
+        </div>
+    </div>
+    {%- endif -%}
+    <div class="card mb-4">
+        <div class="card-header">Developers</div>
+        <div class="card-body">
+            <ul class="list-unstyled mb-0">
+                {%- for dev in proj['developers'] -%}
+                <li><a class="text-decoration-none text-primary" href="/u/{{ dev['username'] }}">{{ dev['name'] }} ({{ dev["username"] }})</a></li>
+                {%- endfor -%}
+            </ul>
+        </div>
+    </div>
+</div>
 
-{{ sub }}
+<!-- {{ sub }} -->
 
 {% endblock %}

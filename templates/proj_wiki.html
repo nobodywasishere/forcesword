@@ -1,0 +1,27 @@
+{% extends 'proj.html' %}
+
+{% block proj_content %}
+
+<div class="col-lg-8">
+    <article>
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{ sub }}</p>
+        </section>
+    </article>
+</div>
+<div class="col-lg-4">
+    <!-- <div class="card mb-4">
+        <div class="card-header">Developers</div>
+        <div class="card-body">
+            <ul class="list-unstyled mb-0">
+                {%- for dev in proj['developers'] -%}
+                <li><a href="/u/{{ dev['username'] }}">{{ dev['name'] }} ({{ dev["username"] }})</a></li>
+                {%- endfor -%}
+            </ul>
+        </div>
+    </div> -->
+</div>
+
+<!-- {{ sub }} -->
+
+{% endblock %}

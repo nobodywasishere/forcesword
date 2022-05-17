@@ -2,10 +2,9 @@
 
 {% block content %}
 
-<h2>{{ user["username"] }}</h2>
-
-<div class="wrapping_list">
+<!-- <div class="wrapping_list">
     <ul class="wrapping_list">
+        {%- if user["projects"]|length > 0 -%}
         {%- for proj in user["projects"] -%}
         <li class="wrapping_list">
             <a href="{{ proj['url'] }}">
@@ -13,8 +12,24 @@
             </a>
         </li>
         {%- endfor -%}
+        {%- endif -%}
     </ul>
+</div> -->
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <header class="mb-4">
+                <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
+                <h3 class="mb-3">{{ user["username"] }}</h3>
+            </header>
+            <article>
+                <p class="">{{ user }}</p>
+            </article>
+        </div>
+    </div>
 </div>
+
 
 
 {% endblock %}

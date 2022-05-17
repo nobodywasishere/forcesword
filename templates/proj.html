@@ -2,36 +2,69 @@
 
 {% block content %}
 
-<h1>{{ proj["name"] }}</h1>
+<!-- <h1>{{ proj["name"] }}</h1> -->
 
-<ul class="nav nav-pills">
-    {%- for tool, tool_info in proj['tools'].items() -%}
-        {%- if tool_info|length == 1 -%}
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <!-- <header class="mb-4">
+            <div class="container">
+                <div class="col-6 mobile-img">
+                    <img src="https://dummyimage.com/300" class="img-fluid" alt="mobile screen">
+                </div>
+                <div class="col-6 my-auto">
+                    Test text
+                    <h1 class="fw-bolder mb-1">{{ proj['name'] }}</h1>
+                    <h3 class="mb-3">{{ proj["summary"] }}</h3>
+                </div>
+            </div>
+        </header> -->
+        <div class="container">
+            <div class="row">
+                {%- if proj['icon_url'] -%}
+                <div class="mb-4" style="width: 100px;">
+                    <img src="{{ proj['icon_url'] }}" style="height: 100%;" />
+                </div>
+                {%- endif -%}
+                <div class="col">
+                    <header class="mb-4">
+                        <h1 class="fw-bolder mb-1">{{ proj['name'] }}</h1>
+                        {%- if proj["summary"] -%}
+                        <h3 class="mb-4">{{ proj["summary"] }}</h3>
+                        {%- endif -%}
+                    </header>
+                </div>
+            </div>
+        </div>
+        <ul class="nav nav-tabs mb-4">
+            {%- for tool, tool_info in proj['tools'].items() -%}
+            {%- if tool_info|length == 1 -%}
             <li class="nav-item">
                 <a class="nav-link 
-                    {% if tool_info[0]['mount_point'] == sub_name %}active{% endif %}" 
+                                            {% if tool_info[0]['mount_point'] == sub_name %}active{% endif %}"
                     href="{{ tool_info[0]['url'] }}">
                     {{ tool_info[0]['mount_label'] }}
                 </a>
             </li>
-        {%- else -%}
+            {%- else -%}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">{{ tool_info[0]['tool_label'] }}</a>
                 <ul class="dropdown-menu">
                     {%- for sub_info in tool_info -%}
-                        <li>
-                            <a class="dropdown-item
-                            {% if sub_info['mount_point'] == sub_name %}active{% endif %}" 
+                    <li>
+                        <a class="dropdown-item
+                                                {% if sub_info['mount_point'] == sub_name %}active{% endif %}"
                             href="{{ sub_info['url'] }}">{{ sub_info['mount_label']}}</a>
-                        </li>
+                    </li>
                     {%- endfor -%}
                 </ul>
             </li>
-        {%- endif -%}
-    {%- endfor -%}
-</ul>
-
-{% block proj_content %}
-{% endblock %}
+            {%- endif -%}
+            {%- endfor -%}
+        </ul>
+        {% block proj_content %}
+        {% endblock %}
+    </div>
+</div>
 
 {% endblock %}
