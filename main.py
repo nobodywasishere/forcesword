@@ -4,14 +4,26 @@ from flask import Flask, render_template, redirect
 import requests as rq
 from pprint import pprint
 from pathlib import Path
+import feedparser
+from urlextract import URLExtract
+import datetime as dt
+import atexit
+import pickle
 
 app = Flask(__name__)
 
-SF_API_URL = "https://sourceforge.net/rest"
+SF_WEB_URL = "https://sourceforge.net"
+SF_API_URL = f"{SF_WEB_URL}/rest"
+
+PROF_IMAGE_CACHE_FILE = 'prof-image-cache.pkl'
 
 @app.route('/')
 def index():
    return render_template('index.html')
+
+@app.route('/about/')
+def about():
+   return render_template('about.html')
 
 @app.route('/favicon.ico/')
 def favicon():
@@ -31,7 +43,10 @@ def redirectProjSummary(proj):
 def viewProject(proj, sub='summary'):
 
    sum_resp = rq.get(f"{SF_API_URL}/p/{proj}")
-   sum_json = formatProjJson(sum_resp.json())
+   if 400 <= sum_resp.status_code < 500:
+      return f'Error {sum_resp.status_code}'
+   else:
+      sum_json = formatProjJson(sum_resp.json())
 
    if sub != "summary":
       sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/{sub}")
@@ -78,6 +93,9 @@ def formatProjJson(proj):
 
    if 'developers' in proj:
       proj['developers'].sort(key=lambda item: item.get("username"))
+      # Really slow
+      for dev_i in range(len(proj['developers'])):
+         proj['developers'][dev_i]['icon_url'] = getProfileImageUrl(proj['developers'][dev_i]['username'])
 
    if 'short_description' in proj:
       proj['short_description'] = proj['short_description'].splitlines()
@@ -91,7 +109,58 @@ def redirectToUserProf(user):
 @app.route('/u/<user>/profile/')
 def viewUserProfile(user):
    resp = rq.get(f"{SF_API_URL}/u/{user}/profile")
-   return render_template('user.html', user=resp.json())
+   user_json = resp.json()
+   user_json['icon_url'] = getProfileImageUrl(user, cache=False)
+   act = feedparser.parse(f"{SF_WEB_URL}/u/{user}/profile/feed.rss")
+   return render_template('user.html', user=user_json, user_activity=act)
+
+def getProfileImageUrl(user, cache=True):
+   global prof_image_cache
+   
+   # Keep the profile picture for 7 days
+   if user in prof_image_cache and (prof_image_cache[user]['time'] - dt.datetime.now()) < dt.timedelta(days=21) and cache:
+      icon_url = prof_image_cache[user]['icon_url']
+   else:
+      print(f"Getting profile picture for {user}")
+      req = rq.get(f"{SF_WEB_URL}/u/{user}/profile")
+      icon_url = None
+      for url in URLExtract().find_urls(''.join(map(chr, req.content))):
+         if 'gravatar' in url or 'user_icon' in url:
+            icon_url = url
+            break
+      prof_image_cache[user] = {
+         'icon_url': icon_url,
+         'time': dt.datetime.now()
+      }
+   
+   return icon_url
+
+if Path(PROF_IMAGE_CACHE_FILE).exists():
+   with open(PROF_IMAGE_CACHE_FILE, 'rb') as f:
+      prof_image_cache = pickle.load(f)
+   # print(f"Loaded prof-image-cache: {prof_image_cache}")
+else:
+   prof_image_cache = {}
+
+def saveProfImageCache():
+   global prof_image_cache
+   # print(f"Saving prof-image-cache: {prof_image_cache}")
+
+   with open(PROF_IMAGE_CACHE_FILE, 'rb') as f:
+      prof_image_cache_old = pickle.load(f)
+
+   # Merge the old and new caches
+   for key, val in prof_image_cache_old.items():
+      if key in prof_image_cache:
+         if val['time'] > prof_image_cache[key]['time']:
+            prof_image_cache[key] = val
+      else:
+         prof_image_cache[key] = val
+
+   with open(PROF_IMAGE_CACHE_FILE, 'wb') as f:
+      pickle.dump(prof_image_cache, f)
+
+atexit.register(saveProfImageCache)
 
 if __name__ == '__main__':
    app.run()

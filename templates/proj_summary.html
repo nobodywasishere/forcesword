@@ -2,17 +2,18 @@
 
 {% block proj_content %}
 
-<div class="col-lg-8">
+<div class="col-md-8">
     <article>
         <section class="mb-5">
             {%- for desc in sub["short_description"] -%}
             <p class="fs-5 mb-4">{{ desc }}</p>
+            <p>{{sub}}</p>
             {%- endfor -%}
         </section>
     </article>
 </div>
-<div class="col-lg-4">
-    {%- if recent_activity -%}
+<div class="col-md-4">
+    {%- if recent_activity['timeline'] -%}
     <div class="card mb-4">
         <div class="card-header">Recent Activity</div>
         <div class="card-body">
@@ -30,11 +31,22 @@
     {%- endif -%}
     <div class="card mb-4">
         <div class="card-header">Developers</div>
-        <div class="card-body">
-            <ul class="list-unstyled mb-0">
-                {%- for dev in proj['developers'] -%}
-                <li><a class="text-decoration-none text-primary" href="/u/{{ dev['username'] }}">{{ dev['name'] }} ({{ dev["username"] }})</a></li>
-                {%- endfor -%}
+        <div class="card-body wrapping_list">
+            <ul class="list-unstyled m-0 p-0">
+                {%- if proj['developers'][0]['icon_url'] -%}
+                    {%- for dev in proj['developers'] -%}
+                    <li>
+                        <a href="/u/{{ dev['username'] }}" data-toggle="tooltip" 
+                            title="{{ dev['name'] }} ({{ dev['username'] }})">
+                            <img src="{{ dev['icon_url'] }}" class="rounded-3"/>
+                        </a>
+                    </li>
+                    {%- endfor -%}
+                {%- else -%}
+                    {%- for dev in proj['developers'] -%}
+                    <li><a class="text-decoration-none text-primary" href="/u/{{ dev['username'] }}">{{ dev['name'] }} ({{ dev["username"] }})</a></li>
+                    {%- endfor -%}
+                {%- endif -%}
             </ul>
         </div>
     </div>

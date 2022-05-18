@@ -1,0 +1,25 @@
+html {
+    font-size: 15px;
+}
+
+.wrapping_list div {
+    display: flex;
+    justify-content: center;
+}
+
+.wrapping_list ul {
+    text-align: center;
+    list-style: inside;
+}
+
+.wrapping_list li {
+    vertical-align: top;
+    display: inline-block;
+    margin: 1%;
+    width: 50px;
+    overflow: auto;
+}
+
+.wrapping_list img {
+    width: 90%;
+}

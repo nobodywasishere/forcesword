@@ -1,0 +1,17 @@
+{% extends 'proj.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-5 px-5" style="max-width: 1200px">
+    <header class="mb-4 d-flex align-items-center">
+        <h1 class="fw-bolder mb-1">About Forcesword</h1>
+    </header>
+    <div class="col-md-6">
+        <article>
+            <p class="md-4">Forcesword is an alternative frontend for <a href="https://sourceforge.net/">SourceForge</a> and other <a href="https://allura.apache.org/">Apache Allura</a> websites. Built around the <a href="https://anypoint.mulesoft.com/apiplatform/forge-allura/#/portals/organizations/86c00a85-31e6-4302-b36d-049ca5d042fd/apis/32370/versions/33732">Allura REST API</a> with <a href="https://flask.palletsprojects.com">Flask</a> and <a href="https://getbootstrap.com/">Bootstrap</a>. The source code is available <a href="https://github.com/nobodywasishere/forcesword">here</a>, licensed under the GPLv3 license.</p>
+            <p class="md-4">To use, simply replace <code>sourceforge.net</code> with <code>forcesword.net</code> for any Sourceforge project or user endpoint. For example, <a href="https://sourceforge.net/projects/unicon/">https://sourceforge.net/projects/unicon/</a> would become <a href="https://forcesword.net/projects/unicon/">https://forcesword.net/projects/unicon/</a></p>
+        </article>
+    </div>
+</div>
+
+{% endblock %}

@@ -2,34 +2,113 @@
 
 {% block content %}
 
-<!-- <div class="wrapping_list">
-    <ul class="wrapping_list">
-        {%- if user["projects"]|length > 0 -%}
-        {%- for proj in user["projects"] -%}
-        <li class="wrapping_list">
-            <a href="{{ proj['url'] }}">
-                <p>{{ proj["name"] }}</p>
-            </a>
-        </li>
-        {%- endfor -%}
+<div class="container-fluid mt-5 px-5" style="max-width: 1200px">
+    <header class="mb-4 d-flex align-items-center">
+        {%- if user['icon_url'] -%}
+        <img src="{{ user['icon_url'] }}" class="img-fluid img-thumbnail me-3" style="height: 100px;" />
         {%- endif -%}
-    </ul>
-</div> -->
-
-<div class="container mt-5">
+        <div>
+            <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
+            <h3>{{ user["username"] }}</h3>
+        </div>
+    </header>
     <div class="row">
-        <div class="col-lg-8">
-            <header class="mb-4">
-                <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
-                <h3 class="mb-3">{{ user["username"] }}</h3>
-            </header>
+        <div class="col-md-8 mb-4">
             <article>
-                <p class="">{{ user }}</p>
+                <p class="md-4">{{ user }}</p>
+                {%- if user['projects'] -%}
+                <h2>Projects</h2>
+                {%- for user_project in user['projects'] -%}
+                <p class="md-4">{{ user_project }}</p>
+                {%- endfor -%}
+                {%- endif -%}
+                <h2>Recent Activity</h2>
+                {%- for entry in user_activity['entries'] -%}
+                <p class="md-4">{{ entry }}</p>
+                {%- endfor -%}
             </article>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Information</div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Name</td>
+                            <td>{{ user['name'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Username</td>
+                            <td>{{ user['username'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Joined</td>
+                            <td>{{ user['joined']}}</td>
+                        </tr>
+                        {%- if user['localization']['country'] -%}
+                        <tr>
+                            <td>Location</td>
+                            <td>
+                                {% if user['localization']['city'] %}
+                                {{ user['localization']['city']}},
+                                {% endif %}
+                                {{ user['localization']['country']}}
+                            </td>
+                        </tr>
+                        {%- endif -%}
+                        {%- if user['sex'] != 'Unknown' -%}
+                        <tr>
+                            <td>Gender</td>
+                            <td>{{ user['sex'] }}</td>
+                        </tr>
+                        {%- endif -%}
+                        {%- for webpage in user['webpages'] -%}
+                        <tr>
+                            <td>Website</td>
+                            <td><a href='{{ webpage }}'>{{ webpage }}</a></td>
+                        </tr>
+                        {%- endfor -%}
+                        {%- if user['skypeaccount'] -%}
+                        <tr>
+                            <td>Skype</td>
+                            <td>{{ user['skypeaccount'] }}</td>
+                        </tr>
+                        {%- endif -%}
+                    </table>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">Skills</div>
+                <div class="card-body wrapping_list">
+                {%- if user['skills'] -%}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Skill</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%- for skill in user['skills'] -%}
+                        <tr>
+                            <td>{{ skill['skill']['fullname'] }}</td>
+                            <td>{{ skill['level'] }}</td>
+                            <td>{{ skill['comment'] }}</td>
+                        </tr>
+                        {%- endfor -%}
+                    </tbody>
+                </table>
+                {%- endif -%}
+                </div>
+            </div>
+            <!-- <div class="card mb-4">
+                <div class="card-header">Tools</div>
+                <div class="card-body wrapping_list">
+                </div>
+            </div> -->
         </div>
     </div>
 </div>
-
-
 
 {% endblock %}
