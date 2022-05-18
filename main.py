@@ -31,30 +31,26 @@ def redirectProjSummary(proj):
 def viewProject(proj, sub='summary'):
 
    sum_resp = rq.get(f"{SF_API_URL}/p/{proj}")
+   sum_json = formatProjJson(sum_resp.json())
 
    if sub != "summary":
       sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/{sub}")
    else:
       sub_resp = sum_resp
+   if 200 <= sub_resp.status_code < 300:
+      sub_json = formatProjJson(sub_resp.json())
+   else:
+      sub_json = None
 
    if sub == "summary":
       act_json = rq.get(f"{SF_API_URL}/p/{proj}/activity/").json()
    else:
       act_json = None
 
-   sum_json = formatProjJson(sum_resp.json())
-
-   if 200 <= sub_resp.status_code < 300:
-      sub_json = formatProjJson(sub_resp.json())
-   else:
-      sub_json = None
-
    if Path(f'templates/proj_{sub}.html').exists():
       return render_template(f'proj_{sub}.html', proj=sum_json, sub_name=sub, sub=sub_json, recent_activity=act_json)
-   elif 400 <= sub_resp.status_code < 500:
-      return render_template(f'proj_summary.html', proj=sum_json, sub_name=sub, sub=sub_resp.status_code, recent_activity=act_json)
    else:
-      return render_template(f'proj_summary.html', proj=sum_json, sub_name=sub, sub=sub_json, recent_activity=act_json)
+      return render_template(f'proj.html', proj=sum_json, sub_name=sub, sub=sub_json, recent_activity=act_json)
 
 def formatProjJson(proj):
    if 'tools' in proj:
