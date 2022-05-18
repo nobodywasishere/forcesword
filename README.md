@@ -38,3 +38,5 @@ New pages:
 Licensed under the GNU General Public License version 3.
 
 Portions of this project borrowed from [startbootstrap-blog-post](https://github.com/StartBootstrap/startbootstrap-blog-post).
+
+<a href="https://www.flaticon.com/free-icons/sword" title="sword icons">Sword icons created by Freepik - Flaticon</a>
