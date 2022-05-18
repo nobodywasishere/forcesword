@@ -146,16 +146,18 @@ def saveProfImageCache():
    global prof_image_cache
    # print(f"Saving prof-image-cache: {prof_image_cache}")
 
-   with open(PROF_IMAGE_CACHE_FILE, 'rb') as f:
-      prof_image_cache_old = pickle.load(f)
+   if Path(PROF_IMAGE_CACHE_FILE).exists():
 
-   # Merge the old and new caches
-   for key, val in prof_image_cache_old.items():
-      if key in prof_image_cache:
-         if val['time'] > prof_image_cache[key]['time']:
+      with open(PROF_IMAGE_CACHE_FILE, 'rb') as f:
+         prof_image_cache_old = pickle.load(f)
+
+      # Merge the old and new caches
+      for key, val in prof_image_cache_old.items():
+         if key in prof_image_cache:
+            if val['time'] > prof_image_cache[key]['time']:
+               prof_image_cache[key] = val
+         else:
             prof_image_cache[key] = val
-      else:
-         prof_image_cache[key] = val
 
    with open(PROF_IMAGE_CACHE_FILE, 'wb') as f:
       pickle.dump(prof_image_cache, f)
