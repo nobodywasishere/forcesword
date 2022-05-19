@@ -97,7 +97,21 @@
             {%- for desc in sub["short_description"] -%}
             <p class="fs-5 mb-4">{{ desc }}</p>
             {%- endfor -%}
-            <h2>Recent Activity</h2>
+            {%- if sub["screenshots"] -%}
+            <h2 class="mb-4">Screenshots</h2>
+            <div class="container mb-4">
+                <div class="row align-items-center">
+                {%- for proj_cap in sub['screenshots'] -%}
+                    <div class="col-sm-5 col-md-5 mb-3 mx-auto">
+                        <a href="{{ proj_cap['url'] }}" data-lightbox="photos">
+                            <img class="img-fluid" src="{{ proj_cap['url'] }}">
+                        </a>
+                    </div>
+                {%- endfor -%}
+                </div>
+            </div>
+            {%- endif -%}
+            <h2 class="mb-4">Recent Activity</h2>
             <ul class="list-unstyled mb-0">
                 {%- for act in recent_activity['timeline'][:10] -%}
                 <li>
