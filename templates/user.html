@@ -3,65 +3,38 @@
 {% block content %}
 
 <div class="container-fluid container-fill mt-5">
-    <header class="mb-4 d-flex align-items-center">
-        {%- if user['icon_url'] -%}
-        <img src="{{ user['icon_url'] }}" class="img-fluid img-thumbnail me-3" style="height: 100px;" />
-        {%- endif -%}
-        <div>
-            <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
-            <h3>{{ user["username"] }}</h3>
-        </div>
-    </header>
     <div class="row">
         <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">Information</div>
-                <div class="card-body">
-                    <table class="table table-sm">
-                        <tr>
-                            <td>Name</td>
-                            <td>{{ user['name'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Username</td>
-                            <td>{{ user['username'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Joined</td>
-                            <td>{{ user['joined']}}</td>
-                        </tr>
-                        {%- if user['localization']['country'] -%}
-                        <tr>
-                            <td>Location</td>
-                            <td>
-                                {% if user['localization']['city'] %}
-                                {{ user['localization']['city']}},
-                                {% endif %}
-                                {{ user['localization']['country']}}
-                            </td>
-                        </tr>
-                        {%- endif -%}
-                        {%- if user['sex'] != 'Unknown' -%}
-                        <tr>
-                            <td>Gender</td>
-                            <td>{{ user['sex'] }}</td>
-                        </tr>
-                        {%- endif -%}
-                        {%- for webpage in user['webpages'] -%}
-                        <tr>
-                            <td>Website</td>
-                            <td><a href='{{ webpage }}'>Link</a></td>
-                        </tr>
-                        {%- endfor -%}
-                        {%- if user['skypeaccount'] -%}
-                        <tr>
-                            <td>Skype</td>
-                            <td>{{ user['skypeaccount'] }}</td>
-                        </tr>
-                        {%- endif -%}
-                    </table>
+            <header class="mb-4 d-flex align-items-center">
+                {%- if user['icon_url'] -%}
+                <img src="{{ user['icon_url'] }}" class="img-fluid img-thumbnail me-3" style="height: 100px;" />
+                {%- endif -%}
+                <div>
+                    <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
+                    <h3>{{ user["username"] }}</h3>
                 </div>
-            </div>
+            </header>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item">Joined {{ user['joined'] | formatDate }}</li>
+                {%- if user['localization']['country'] -%}
+                <li class="list-group-item">
+                    {% if user['localization']['city'] %}
+                    {{ user['localization']['city'] }},
+                    {% endif %}
+                    {{ user['localization']['country'] }}
+                </li>
+                {%- endif -%}
+                {%- for webpage in user['webpages'] -%}
+                <li class="list-group-item">
+                    <a href="">{{ webpage | formatURL }}
+
+                    </a>
+                </li>
+                {%- endfor -%}
+                {%- if user['skypeaccount'] -%}
+                <li class="list-group-item">Skype: {{ user['skypeaccount']}}</li>
+                {%- endif -%}
+            </ul>
             <div class="card mb-4">
                 <div class="card-header">Skills</div>
                 <div class="card-body wrapping_list">
@@ -97,14 +70,27 @@
             <article>
                 <!-- <p class="md-4">{{ user }}</p> -->
                 {%- if user['projects'] -%}
-                <h2>Projects</h2>
-                {%- for user_project in user['projects'] -%}
-                <p class="md-4">{{ user_project }}</p>
-                {%- endfor -%}
+                <h2 class="mb-4">Projects</h2>
+                <!-- <p class="md-4">{{ user_project }}</p> -->
+                <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+                    {%- for user_project in user['projects']|sort(attribute='last_updated', reverse = True) -%}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ user_project['url'] }}">{{ user_project["name"] }}</a>
+                                </h5>
+                                <p class="card-text">{{ user_project["summary"] }}</p>
+                                <small>Last updated {{ user_project["last_updated"] | formatDate }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {%- endfor -%}
+                </div>
                 {%- endif -%}
-                <h2>Recent Activity</h2>
+                <h2 class="mb-4">Recent Activity</h2>
                 {%- for entry in user_activity['entries'] -%}
-                <p class="md-4">{{ entry }}</p>
+                <!-- <p class="md-4">{{ entry }}</p> -->
                 {%- endfor -%}
             </article>
         </div>

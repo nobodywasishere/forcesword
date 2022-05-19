@@ -10,6 +10,7 @@ import datetime as dt
 import atexit
 import pickle
 import subprocess as sp
+from dateutil import parser as dtparser
 
 app = Flask(__name__)
 
@@ -177,6 +178,14 @@ def saveProfImageCache():
       pickle.dump(prof_image_cache, f)
 
 atexit.register(saveProfImageCache)
+
+@app.template_filter()
+def formatDate(value, format="%b %d, %Y"):
+   return dt.datetime.strftime(dtparser.parse(value), format)
+
+@app.template_filter()
+def formatURL(value):
+   return value.replace('https://', '').replace('http://', '')
 
 if __name__ == '__main__':
    app.run()
