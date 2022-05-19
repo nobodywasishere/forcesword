@@ -16,7 +16,7 @@ html {
     vertical-align: top;
     display: inline-block;
     margin: 1%;
-    width: 50px;
+    /* width: 7.5rem; */
     overflow: auto;
 }
 

@@ -13,21 +13,6 @@
         </div>
     </header>
     <div class="row">
-        <div class="col-md-8 mb-4">
-            <article>
-                <p class="md-4">{{ user }}</p>
-                {%- if user['projects'] -%}
-                <h2>Projects</h2>
-                {%- for user_project in user['projects'] -%}
-                <p class="md-4">{{ user_project }}</p>
-                {%- endfor -%}
-                {%- endif -%}
-                <h2>Recent Activity</h2>
-                {%- for entry in user_activity['entries'] -%}
-                <p class="md-4">{{ entry }}</p>
-                {%- endfor -%}
-            </article>
-        </div>
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">Information</div>
@@ -107,6 +92,21 @@
                 <div class="card-body wrapping_list">
                 </div>
             </div> -->
+        </div>
+        <div class="col-md-8 mb-4">
+            <article>
+                <!-- <p class="md-4">{{ user }}</p> -->
+                {%- if user['projects'] -%}
+                <h2>Projects</h2>
+                {%- for user_project in user['projects'] -%}
+                <p class="md-4">{{ user_project }}</p>
+                {%- endfor -%}
+                {%- endif -%}
+                <h2>Recent Activity</h2>
+                {%- for entry in user_activity['entries'] -%}
+                <p class="md-4">{{ entry }}</p>
+                {%- endfor -%}
+            </article>
         </div>
     </div>
 </div>

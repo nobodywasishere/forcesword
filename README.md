@@ -15,7 +15,7 @@ Summary page:
 - [ ] Developer icons in a table instead of a list
 - [ ] More verbose recent activity pane
 - [ ] Add metadata (category, license, programming language, operating systems, etc)
-- [ ] Download button
+- [ ] Download button / [stats](https://sourceforge.net/p/forge/documentation/Download%20Stats%20API/) (`/projects/<proj>/files/stats/json?start_date=2014-10-29&end_date=2014-11-04`)
 
 User profile page:
 
