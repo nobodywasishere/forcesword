@@ -133,7 +133,12 @@ def getProfileImageUrl(user, cache=True):
       req = rq.get(f"{SF_WEB_URL}/u/{user}/profile")
       icon_url = '/static/icon.png'
       content = ''.join(map(chr, req.content))
+
+      # search for both gravatar and allura profile pictures
       search = re.search(r'https:\/\/secure\.gravatar\.com\/avatar/[a-z0-9]+', content)
+      if search:
+         icon_url = search.group()
+      search = re.search(rf'https:\/\/a\.fsdn\.com\/allura\/u\/{user}/user_icon', content)
       if search:
          icon_url = search.group()
 
