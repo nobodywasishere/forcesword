@@ -31,14 +31,16 @@
                 <td>Created</td>
                 <td>{{ proj['creation_date'] }}</td>
             </tr>
+            {%- if proj['categories']['language'] -%}
             <tr>
                 <td>Language</td>
                 <td>
                     {%- for proj_lang in proj['categories']['language'] -%}
-                    {{ proj_lang['fullname'] }}{%- if not loop.last -%}, {%- endif -%}
+                    {{ proj_lang['fullname'] }}{% if not loop.last %}, {% endif %}
                     {%- endfor -%}
                 </td>
             </tr>
+            {%- endif -%}
             <tr>
                 <td>Homepage</td>
                 <td>
@@ -57,7 +59,7 @@
                     </a>
                 </td>
             </tr>
-    {%- endif -%}
+            {%- endif -%}
             {%- endfor -%}
             {%- for proj_licn in proj['categories']['license'] -%}
             <tr>
@@ -94,23 +96,28 @@
 <div class="col-md-8">
     <article>
         <section class="mb-5">
+            {%- if sub["screenshots"] -%}
+            <div id="carouselExampleControls" class="carousel carousel-dark slide mb-4" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {%- for proj_cap in sub['screenshots'] -%}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}" data-bs-interval="5000">
+                        <img src="{{ proj_cap['url'] }}" class="d-block mx-auto" style="height: 20rem;">
+                    </div>
+                    {%- endfor -%}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            {%- endif -%}
             {%- for desc in sub["short_description"] -%}
             <p class="fs-5 mb-4">{{ desc }}</p>
             {%- endfor -%}
-            {%- if sub["screenshots"] -%}
-            <h2 class="mb-4">Screenshots</h2>
-            <div class="container mb-4">
-                <div class="row align-items-center">
-                {%- for proj_cap in sub['screenshots'] -%}
-                    <div class="col-sm-5 col-md-5 mb-3 mx-auto">
-                        <a href="{{ proj_cap['url'] }}" data-lightbox="photos">
-                            <img class="img-fluid" src="{{ proj_cap['url'] }}">
-                        </a>
-                    </div>
-                {%- endfor -%}
-                </div>
-            </div>
-            {%- endif -%}
             <h2 class="mb-4">Recent Activity</h2>
             <ul class="list-unstyled mb-0">
                 {%- for act in recent_activity['timeline'][:10] -%}
