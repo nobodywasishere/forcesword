@@ -5,7 +5,7 @@ import requests as rq
 from pprint import pprint
 from pathlib import Path
 import feedparser
-from urlextract import URLExtract
+import re
 import datetime as dt
 import atexit
 import pickle
@@ -131,11 +131,12 @@ def getProfileImageUrl(user, cache=True):
    else:
       print(f"Getting profile picture for {user}")
       req = rq.get(f"{SF_WEB_URL}/u/{user}/profile")
-      icon_url = None
-      for url in URLExtract().find_urls(''.join(map(chr, req.content))):
-         if 'gravatar' in url or 'user_icon' in url:
-            icon_url = url
-            break
+      icon_url = '/static/icon.png'
+      content = ''.join(map(chr, req.content))
+      search = re.search(r'https:\/\/secure\.gravatar\.com\/avatar/[a-z0-9]+', content)
+      if search:
+         icon_url = search.group()
+
       prof_image_cache[user] = {
          'icon_url': icon_url,
          'time': dt.datetime.now()
