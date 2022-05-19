@@ -9,6 +9,7 @@ from urlextract import URLExtract
 import datetime as dt
 import atexit
 import pickle
+import subprocess as sp
 
 app = Flask(__name__)
 
@@ -16,6 +17,13 @@ SF_WEB_URL = "https://sourceforge.net"
 SF_API_URL = f"{SF_WEB_URL}/rest"
 
 PROF_IMAGE_CACHE_FILE = 'prof-image-cache.pkl'
+
+@app.context_processor
+def injectMetadata():
+   git_commit = str(sp.check_output('git rev-list --count main'.split(' ')))[2:-3]
+   git_hash = str(sp.check_output('git rev-parse --short HEAD'.split(' ')))[2:-3]
+   git_date = str(sp.check_output(['git', 'log', '-n', '1', '--pretty=format:%cd', '--date=format:"%b %d, %Y"']))[3:-2]
+   return dict(git_commit=git_commit, git_hash=git_hash, git_date=git_date)
 
 @app.route('/')
 def index():
