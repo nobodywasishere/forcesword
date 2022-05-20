@@ -6,23 +6,30 @@ WIP alternative frontend for [SourceForge](https://sourceforge.net/) and other [
 
 Entire site:
 
+- [ ] Use sqlite3 database for caching user profile icons (instead of pkl file)
 - [ ] Login/authentication
 - [ ] Home page with a list of some projects, etc
-- [ ] About page
+- [x] About page
 
 Summary page:
 
-- [ ] Developer icons in a table instead of a list
-- [ ] More verbose recent activity pane
-- [ ] Add metadata (category, license, programming language, operating systems, etc)
 - [ ] Download button / [stats](https://sourceforge.net/p/forge/documentation/Download%20Stats%20API/) (`/projects/<proj>/files/stats/json?start_date=2014-10-29&end_date=2014-11-04`)
+- [ ] Recent Activity `Show More` button instead of entire text OR ellipse cutoff on one line
+- [ ] Sliding navbar instead of wrapping
+- [ ] Relative time (i.e., `3 days ago`) for dates/times under 1 month
+- [ ] Screenshot modal
+- [x] Developer icons in a table instead of a list
+- [x] More verbose recent activity pane
+- [x] Add metadata (category, license, programming language, operating systems, etc)
+- [x] Screenshot carousel
 
 User profile page:
 
-- [ ] Personal data
-- [ ] List of projects
-- [ ] Skills
-- [ ] Recent activity (may have to resort to rss feed, `/u/<user>/profile/feed.rss`)
+- [ ] Better profile image layout / position
+- [x] Personal data
+- [x] List of projects
+- [x] Skills
+- [x] Recent activity (may have to resort to rss feed, `/u/<user>/profile/feed.rss`)
 
 New pages:
 
