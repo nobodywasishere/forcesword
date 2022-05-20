@@ -3,50 +3,50 @@
 {% block content %}
 
 <div class="container-fluid container-fill mt-3">
-        <header class="mb-4 d-flex align-items-center">
-            {%- if proj['icon_url'] -%}
-            <img src="{{ proj['icon_url'] }}" class="img-fluid img-thumbnail me-3"
-                style="height: 100px;"/>
+    <header class="mb-4 d-flex align-items-center">
+        {%- if proj['icon_url'] -%}
+        <img src="{{ proj['icon_url'] }}" class="img-fluid img-thumbnail me-3"
+            style="height: 100px;"/>
+        {%- endif -%}
+        <div>
+            <h1 class="fw-bolder mb-1">{{ proj['name'] }}</h1>
+            {%- if proj["summary"] -%}
+            <h3>{{ proj["summary"] }}</h3>
             {%- endif -%}
-            <div>
-                <h1 class="fw-bolder mb-1">{{ proj['name'] }}</h1>
-                {%- if proj["summary"] -%}
-                <h3>{{ proj["summary"] }}</h3>
-                {%- endif -%}
-            </div>
-        </header>
-        <ul class="nav nav-tabs mb-4">
-            {%- for tool, tool_info in proj['tools'].items() -%}
-            {%- if tool_info|length == 1 -%}
-            <li class="nav-item">
-                <a class="nav-link 
-                    {% if tool_info[0]['mount_point'] == sub_name %}active{% endif %}"
-                    href="{{ tool_info[0]['url'] }}">
-                    {{ tool_info[0]['mount_label'] }}
-                </a>
-            </li>
-            {%- else -%}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle
-                    {% for sub_info in tool_info %}
-                    {% if sub_info['mount_point'] == sub_name %}active{% endif %}
-                    {% endfor %}" 
-                    data-bs-toggle="dropdown" role="button">
-                    {{ tool_info[0]['tool_label'] }}
-                </a>
-                <ul class="dropdown-menu">
-                    {%- for sub_info in tool_info -%}
-                    <li>
-                        <a class="dropdown-item
-                            {% if sub_info['mount_point'] == sub_name %}active{% endif %}"
-                            href="{{ sub_info['url'] }}">{{ sub_info['mount_label']}}</a>
-                    </li>
-                    {%- endfor -%}
-                </ul>
-            </li>
-            {%- endif -%}
-            {%- endfor -%}
-        </ul>
+        </div>
+    </header>
+    <ul class="nav nav-tabs mb-4">
+        {%- for tool, tool_info in proj['tools'].items() -%}
+        {%- if tool_info|length == 1 -%}
+        <li class="nav-item">
+            <a class="nav-link 
+                {% if tool_info[0]['mount_point'] == sub_name %}active{% endif %}"
+                href="{{ tool_info[0]['url'] }}">
+                {{ tool_info[0]['mount_label'] }}
+            </a>
+        </li>
+        {%- else -%}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle
+                {% for sub_info in tool_info %}
+                {% if sub_info['mount_point'] == sub_name %}active{% endif %}
+                {% endfor %}" 
+                data-bs-toggle="dropdown" role="button">
+                {{ tool_info[0]['tool_label'] }}
+            </a>
+            <ul class="dropdown-menu">
+                {%- for sub_info in tool_info -%}
+                <li>
+                    <a class="dropdown-item
+                        {% if sub_info['mount_point'] == sub_name %}active{% endif %}"
+                        href="{{ sub_info['url'] }}">{{ sub_info['mount_label']}}</a>
+                </li>
+                {%- endfor -%}
+            </ul>
+        </li>
+        {%- endif -%}
+        {%- endfor -%}
+    </ul>
     <div class="row">
         {% block proj_content %}
         {% endblock %}

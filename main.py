@@ -28,7 +28,20 @@ def injectMetadata():
 
 @app.route('/')
 def index():
-   return render_template('index.html')
+   req = rq.get(f"{SF_WEB_URL}")
+   if 200 <= req.status_code < 300:
+      content = ''.join(map(chr, req.content))
+      search = re.findall(r'href="/projects/([a-zA-Z0-9_-]+)/"', content)
+      search = list(set(search))
+      search.sort()
+      out = []
+      for proj in search:
+         resp = rq.get(f"{SF_API_URL}/p/{proj}")
+         out.append(formatProjJson(resp.json(), skip_images=True))
+   else:
+      out = []
+
+   return render_template('home.html', projects=out)
 
 @app.route('/about/')
 def about():
@@ -76,7 +89,7 @@ def viewProject(proj, sub='summary'):
    else:
       return render_template(f'proj.html', proj=sum_json, sub_name=sub, sub=sub_json, recent_activity=act_json)
 
-def formatProjJson(proj):
+def formatProjJson(proj, skip_images=False):
    if 'tools' in proj:
       tools = {}
       first_tools = ['summary']#, 'files', 'wiki', 'bugs']
@@ -103,8 +116,9 @@ def formatProjJson(proj):
    if 'developers' in proj:
       proj['developers'].sort(key=lambda item: item.get("username"))
       # Really slow
-      for dev_i in range(len(proj['developers'])):
-         proj['developers'][dev_i]['icon_url'] = getProfileImageUrl(proj['developers'][dev_i]['username'])
+      if not skip_images:
+         for dev_i in range(len(proj['developers'])):
+            proj['developers'][dev_i]['icon_url'] = getProfileImageUrl(proj['developers'][dev_i]['username'])
 
    if 'short_description' in proj:
       proj['short_description'] = proj['short_description'].splitlines()

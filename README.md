@@ -8,7 +8,7 @@ Entire site:
 
 - [ ] Use sqlite3 database for caching user profile icons (instead of pkl file)
 - [ ] Login/authentication
-- [ ] Home page with a list of some projects, etc
+- [x] Home page with a list of some projects, etc
 - [x] About page
 
 Summary page:

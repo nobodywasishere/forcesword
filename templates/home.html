@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<div class="container-fluid container-fill mt-3">
+    {%- if projects -%}
+    <h2 class="mb-3 text-center">Featured Projects</h2>
+    {%- for proj in projects -%}
+    <div class="card mb-4">
+        <div class="row">
+            <div class="col-auto">
+                {%- if proj['icon_url'] -%}
+                <img src="{{ proj['icon_url'] }}" class="img-fluid img-thumbnail m-2" style="height: 100px;" />
+                {%- else -%}
+                <img src="/static/icon.png" class="img-fluid img-thumbnail m-2" style="height: 100px;" />
+                {%- endif -%}
+            </div>
+            <div class="col-8 d-flex align-items-center mt-2">
+                <div>
+                    <h4 class="fw-bolder mb-1">
+                        <a class="text-decoration-none" 
+                            href="/p/{{ proj['shortname'] }}/">
+                            {{ proj['name'] }}
+                        </a>
+                    </h4>
+                    {%- if proj["summary"] -%}
+                    <p class="fs-5">{{ proj["summary"] }}</p>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- endfor -%}
+    {%- endif -%}
+</div>
+
+{% endblock %}
