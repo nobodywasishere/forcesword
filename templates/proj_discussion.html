@@ -1,0 +1,13 @@
+{% extends 'proj.html' %}
+
+{% block proj_content %}
+
+
+{%- for forum in sub['forums'] -%}
+<h4>{{ forum["name"] }}</h4>
+<h5>{{ forum["description"] }}</h5>
+{%- endfor -%}
+
+<!-- {{ sub }} -->
+
+{% endblock %}
