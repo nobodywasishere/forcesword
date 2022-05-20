@@ -1,0 +1,29 @@
+{% block body %}
+
+{%- for act in recent_activity['timeline'][:10] -%}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex w-100 justify-content-between">
+            <strong class="m-1">
+                <a class="text-decoration-none text-primary" href="{{ act['actor']['activity_url'] }}">
+                    {{ act['actor']['activity_name'] }}
+                </a>
+                {{ act['verb'] }}
+                <a class="text-decoration-none text-primary" href="{{ act['obj']['activity_url'] }}">
+                    {{ act['obj']['activity_name'] }}
+                </a>
+                {%- if act['target']['activity_name'] -%}
+                on
+                <a class="text-decoration-none text-primary" href="{{ act['target']['activity_url'] }}">
+                    {{ act['target']['activity_name'] }}
+                </a>
+                {%- endif -%}
+            </strong>
+            <small class="m-1">{{ act['published'] | formatUnixTime | formatDate }}</small>
+        </div>
+        <p class="m-1">{{ act['obj']['activity_extras']['summary'] }}</p>
+    </div>
+</div>
+{%- endfor -%}
+
+{% endblock %}

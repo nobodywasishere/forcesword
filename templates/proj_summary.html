@@ -3,73 +3,57 @@
 {% block proj_content %}
 
 <div class="col-md-4">
-    <!-- {%- if recent_activity['timeline'] -%}
     <div class="card mb-4">
-        <div class="card-header">Recent Activity</div>
+        <div class="card-header">Information</div>
         <div class="card-body">
-            <ul class="list-unstyled mb-0">
-            {%- for act in recent_activity['timeline'][:10] -%}
-                <li>
-                    <a class="text-decoration-none text-primary" href="{{ act['actor']['activity_url'] }}">{{ act['actor']['activity_name'] }}</a> 
-                    {{ act['verb'] }} 
-                    <a class="text-decoration-none text-primary" href="{{ act['obj']['activity_url'] }}">{{ act['obj']['activity_name'] }}</a>
-                </li>
-            {%- endfor -%}
-            </ul>
+            <table class="table table-sm">
+                <tr>
+                    <td>Status</td>
+                    <td>{{ proj['status'] }}</td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>{{ proj['creation_date'] }}</td>
+                </tr>
+                {%- if proj['categories']['language'] -%}
+                <tr>
+                    <td>Language</td>
+                    <td>
+                        {%- for proj_lang in proj['categories']['language'] -%}
+                        {{ proj_lang['fullname'] }}{% if not loop.last %}, {% endif %}
+                        {%- endfor -%}
+                    </td>
+                </tr>
+                {%- endif -%}
+                <tr>
+                    <td>Homepage</td>
+                    <td>
+                        <a href="{{ proj['external_homepage'] }}">
+                            Link
+                        </a>
+                    </td>
+                </tr>
+                {%- for proj_socnet in proj['socialnetworks'] -%}
+                {%- if proj_socnet['accounturl'] -%}
+                <tr>
+                    <td>{{ proj_socnet['socialnetwork'] }}</td>
+                    <td>
+                        <a href="{{ proj_socnet['accounturl'] }}">
+                            Link
+                        </a>
+                    </td>
+                </tr>
+                {%- endif -%}
+                {%- endfor -%}
+                {%- for proj_licn in proj['categories']['license'] -%}
+                <tr>
+                    <td>License</td>
+                    <td>{{ proj_licn['fullname'] }}</td>
+                </tr>
+                {%- endfor -%}
+            </table>
         </div>
     </div>
-    {%- endif -%} -->
-<div class="card mb-4">
-    <div class="card-header">Information</div>
-    <div class="card-body">
-        <table class="table table-sm">
-            <tr>
-                <td>Status</td>
-                <td>{{ proj['status'] }}</td>
-            </tr>
-            <tr>
-                <td>Created</td>
-                <td>{{ proj['creation_date'] }}</td>
-            </tr>
-            {%- if proj['categories']['language'] -%}
-            <tr>
-                <td>Language</td>
-                <td>
-                    {%- for proj_lang in proj['categories']['language'] -%}
-                    {{ proj_lang['fullname'] }}{% if not loop.last %}, {% endif %}
-                    {%- endfor -%}
-                </td>
-            </tr>
-            {%- endif -%}
-            <tr>
-                <td>Homepage</td>
-                <td>
-                    <a href="{{ proj['external_homepage'] }}">
-                        Link
-                    </a>
-                </td>
-            </tr>
-            {%- for proj_socnet in proj['socialnetworks'] -%}
-            {%- if proj_socnet['accounturl'] -%}
-            <tr>
-                <td>{{ proj_socnet['socialnetwork'] }}</td>
-                <td>
-                    <a href="{{ proj_socnet['accounturl'] }}">
-                        Link
-                    </a>
-                </td>
-            </tr>
-            {%- endif -%}
-            {%- endfor -%}
-            {%- for proj_licn in proj['categories']['license'] -%}
-            <tr>
-                <td>License</td>
-                <td>{{ proj_licn['fullname'] }}</td>
-            </tr>
-            {%- endfor -%}
-        </table>
-    </div>
-</div>
     <div class="card mb-4">
         <div class="card-header">Developers</div>
         <div class="card-body wrapping_list">
@@ -119,16 +103,7 @@
             <p class="fs-5 mb-4">{{ desc }}</p>
             {%- endfor -%}
             <h2 class="mb-4">Recent Activity</h2>
-            <ul class="list-unstyled mb-0">
-                {%- for act in recent_activity['timeline'][:10] -%}
-                <li>
-                    <a class="text-decoration-none text-primary" href="{{ act['actor']['activity_url'] }}">{{ act['actor']['activity_name'] }}</a> 
-                    {{ act['verb'] }} 
-                    <a class="text-decoration-none text-primary" href="{{ act['obj']['activity_url'] }}">{{ act['obj']['activity_name'] }}</a>
-                </li>
-                {%- endfor -%}
-            </ul>
-            <!-- <p>{{sub}}</p> -->
+            {% include 'includes/recent_activity.html' %}
         </section>
     </article>
 </div>

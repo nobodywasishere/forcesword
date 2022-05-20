@@ -120,8 +120,10 @@ def viewUserProfile(user):
    resp = rq.get(f"{SF_API_URL}/u/{user}/profile")
    user_json = resp.json()
    user_json['icon_url'] = getProfileImageUrl(user, cache=False)
-   act = feedparser.parse(f"{SF_WEB_URL}/u/{user}/profile/feed.rss")
-   return render_template('user.html', user=user_json, user_activity=act)
+   # act_json = feedparser.parse(f"{SF_WEB_URL}/u/{user}/profile/feed.rss")
+   act_json = rq.get(f"{SF_API_URL}/u/{user}/activity/").json()
+
+   return render_template('user.html', user=user_json, recent_activity=act_json)
 
 def getProfileImageUrl(user, cache=True):
    global prof_image_cache
@@ -181,7 +183,11 @@ atexit.register(saveProfImageCache)
 
 @app.template_filter()
 def formatDate(value, format="%b %d, %Y"):
-   return dt.datetime.strftime(dtparser.parse(value), format)
+   return dt.datetime.strftime(dtparser.parse(str(value)), format)
+
+@app.template_filter()
+def formatUnixTime(value):
+   return dt.datetime.utcfromtimestamp(int(str(value)[:-3])).strftime('%Y-%m-%d %H:%M:%S')
 
 @app.template_filter()
 def formatURL(value):

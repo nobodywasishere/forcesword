@@ -2,16 +2,16 @@
 
 {% block content %}
 
-<div class="container-fluid container-fill mt-5">
+<div class="container-fluid container-fill mt-3">
     <div class="row">
         <div class="col-md-4">
+            {%- if user['icon_url'] -%}
+            <img src="{{ user['icon_url'] }}" class="img-fluid img-thumbnail me-3 mx-auto" style="height: 100px;" />
+            {%- endif -%}
             <header class="mb-4 d-flex align-items-center">
-                {%- if user['icon_url'] -%}
-                <img src="{{ user['icon_url'] }}" class="img-fluid img-thumbnail me-3" style="height: 100px;" />
-                {%- endif -%}
                 <div>
-                    <h1 class="fw-bolder mb-1">{{ user['name'] }}</h1>
-                    <h3>{{ user["username"] }}</h3>
+                    <h2 class="fw-bolder mb-1">{{ user['name'] }}</h2>
+                    <h4>{{ user["username"] }}</h4>
                 </div>
             </header>
             <ul class="list-group list-group-flush mb-4">
@@ -35,31 +35,32 @@
                 <li class="list-group-item">Skype: {{ user['skypeaccount']}}</li>
                 {%- endif -%}
             </ul>
+            {%- if user['skills'] -%}
             <div class="card mb-4">
                 <div class="card-header">Skills</div>
                 <div class="card-body wrapping_list">
-                {%- if user['skills'] -%}
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">Skill</th>
-                            <th scope="col">Level</th>
-                            <th scope="col">Comment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%- for skill in user['skills'] -%}
-                        <tr>
-                            <td>{{ skill['skill']['fullname'] }}</td>
-                            <td>{{ skill['level'] }}</td>
-                            <td>{{ skill['comment'] }}</td>
-                        </tr>
-                        {%- endfor -%}
-                    </tbody>
-                </table>
-                {%- endif -%}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Skill</th>
+                                <th scope="col">Level</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%- for skill in user['skills'] -%}
+                            <tr>
+                                <td>{{ skill['skill']['fullname'] }}</td>
+                                <td>{{ skill['level'] }}</td>
+                                <td>{{ skill['comment'] }}</td>
+                            </tr>
+                            {%- endfor -%}
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            {%- endif -%}
+            <hr class="mb-4">
             <!-- <div class="card mb-4">
                 <div class="card-header">Tools</div>
                 <div class="card-body wrapping_list">
@@ -72,7 +73,7 @@
                 {%- if user['projects'] -%}
                 <h2 class="mb-4">Projects</h2>
                 <!-- <p class="md-4">{{ user_project }}</p> -->
-                <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+                <div class="row row-cols-1 row-cols-md-2 g-4 mb-4 mx-1">
                     {%- for user_project in user['projects']|sort(attribute='last_updated', reverse = True) -%}
                     <div class="col">
                         <div class="card h-100">
@@ -89,9 +90,7 @@
                 </div>
                 {%- endif -%}
                 <h2 class="mb-4">Recent Activity</h2>
-                {%- for entry in user_activity['entries'] -%}
-                <!-- <p class="md-4">{{ entry }}</p> -->
-                {%- endfor -%}
+                {% include 'includes/recent_activity.html' %}
             </article>
         </div>
     </div>
