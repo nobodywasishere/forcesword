@@ -7,6 +7,9 @@
         {%- if proj['icon_url'] -%}
         <img src="{{ proj['icon_url'] }}" class="img-fluid img-thumbnail me-3"
             style="height: 100px;"/>
+        {%- else -%}
+        <img src="/static/icon.png" class="img-fluid img-thumbnail me-3"
+            style="height: 100px;"/>
         {%- endif -%}
         <div>
             <h1 class="fw-bolder mb-1">{{ proj['name'] }}</h1>
