@@ -79,7 +79,7 @@ def viewProject(proj, sub='summary'):
 def formatProjJson(proj):
    if 'tools' in proj:
       tools = {}
-      first_tools = ['summary', 'files', 'wiki', 'bugs']
+      first_tools = ['summary']#, 'files', 'wiki', 'bugs']
       exclude_tools = ['activity', 'reviews', 'support']
 
       for f in first_tools:
@@ -87,15 +87,15 @@ def formatProjJson(proj):
             if f == tool['name']:
                tools[f] = [tool]
 
-      for tool in proj['tools']:
-         if tool['name'] in tools:
-            if tool in tools[tool['name']]:
-               continue
-            tools[tool['name']].append(tool)
-         elif tool['name'] in exclude_tools:
-            continue
-         else:
-            tools[tool['name']] = [tool]
+      # for tool in proj['tools']:
+      #    if tool['name'] in tools:
+      #       if tool in tools[tool['name']]:
+      #          continue
+      #       tools[tool['name']].append(tool)
+      #    elif tool['name'] in exclude_tools:
+      #       continue
+      #    else:
+      #       tools[tool['name']] = [tool]
 
       tools['summary'][0]['url'] = tools['summary'][0]['url'].replace('summary/', '')
       proj['tools'] = tools
