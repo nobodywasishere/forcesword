@@ -14,10 +14,10 @@ Entire site:
 Summary page:
 
 - [ ] Download button / [stats](https://sourceforge.net/p/forge/documentation/Download%20Stats%20API/) (`/projects/<proj>/files/stats/json?start_date=2014-10-29&end_date=2014-11-04`)
-- [ ] Recent Activity `Show More` button instead of entire text OR ellipse cutoff on one line
 - [ ] Sliding navbar instead of wrapping
 - [ ] Relative time (i.e., `3 days ago`) for dates/times under 1 month
 - [ ] Screenshot modal
+- [x] Recent Activity ellipse cutoff on one line
 - [x] Developer icons in a table instead of a list
 - [x] More verbose recent activity pane
 - [x] Add metadata (category, license, programming language, operating systems, etc)

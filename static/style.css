@@ -24,6 +24,13 @@ html {
     width: 90%;
 }
 
+.cut-text {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media (min-width: 768px) {
     .container-fill {
         padding-left: 1rem !important;

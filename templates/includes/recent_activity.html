@@ -21,7 +21,7 @@
             </strong>
             <small class="m-1">{{ act['published'] | formatUnixTime | formatDate }}</small>
         </div>
-        <p class="m-1">{{ act['obj']['activity_extras']['summary'] }}</p>
+        <p class="m-1 cut-text">{{ act['obj']['activity_extras']['summary'] }}</p>
     </div>
 </div>
 {%- endfor -%}
