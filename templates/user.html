@@ -87,15 +87,17 @@
                                     <a href="{{ user_project['url'] }}">{{ user_project["name"] }}</a>
                                 </h5>
                                 <p class="card-text">{{ user_project["summary"] }}</p>
-                                <small>Last updated {{ user_project["last_updated"] | formatDate }}</small>
+                                <small>Last updated {{ user_project["last_updated"] | formatDate(humanize=True) }}</small>
                             </div>
                         </div>
                     </div>
                     {%- endfor -%}
                 </div>
                 {%- endif -%}
+                {%- if recent_activity['timeline'] -%}
                 <h2 class="mb-4">Recent Activity</h2>
                 {% include 'includes/recent_activity.html' %}
+                {%- endif -%}
             </article>
         </div>
     </div>

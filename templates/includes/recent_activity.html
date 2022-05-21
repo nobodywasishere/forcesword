@@ -19,7 +19,7 @@
                 </a>
                 {%- endif -%}
             </strong>
-            <small class="m-1">{{ act['published'] | formatUnixTime | formatDate }}</small>
+            <small class="m-1 text-nowrap">{{ act['published'] | formatUnixTime | formatDate(humanize=True) }}</small>
         </div>
         <p class="m-1 cut-text">{{ act['obj']['activity_extras']['summary'] }}</p>
     </div>

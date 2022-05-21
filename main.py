@@ -145,7 +145,7 @@ def getProfileImageUrl(user, cache=True):
    global prof_image_cache
    
    # Keep the profile picture for 7 days
-   if user in prof_image_cache and (prof_image_cache[user]['time'] - dt.datetime.now()) < dt.timedelta(days=21) and cache:
+   if user in prof_image_cache and (prof_image_cache[user]['time'] - dt.datetime.utcnow()) < dt.timedelta(days=21) and cache:
       icon_url = prof_image_cache[user]['icon_url']
    else:
       print(f"Getting profile picture for {user}")
@@ -163,7 +163,7 @@ def getProfileImageUrl(user, cache=True):
 
       prof_image_cache[user] = {
          'icon_url': icon_url,
-         'time': dt.datetime.now()
+         'time': dt.datetime.utcnow()
       }
    
    return icon_url
@@ -221,8 +221,46 @@ def profImageCacheUnlock():
 atexit.register(saveProfImageCache)
 
 @app.template_filter()
-def formatDate(value, format="%b %d, %Y"):
-   return dt.datetime.strftime(dtparser.parse(str(value)), format)
+def formatDate(value, format="%b %d, %Y", humanize=False):
+   if humanize:
+      return humanizeDate(dtparser.parse(str(value)))
+   else:
+      return dt.datetime.strftime(dtparser.parse(str(value)), format)
+
+# https://stackoverflow.com/a/1551394/9047818
+def humanizeDate(in_time: dt.datetime, format="%b %d, %Y"):
+   now = dt.datetime.utcnow()
+   diff = now - in_time
+   second_diff = diff.seconds
+   day_diff = diff.days
+
+   if day_diff < 0:
+      print(in_time)
+      return ''
+
+   if day_diff == 0:
+      if second_diff < 10:
+         return "just now"
+      if second_diff < 60:
+         return str(second_diff) + " seconds ago"
+      if second_diff < 120:
+         return "a minute ago"
+      if second_diff < 3600:
+         return str(second_diff // 60) + " minutes ago"
+      if second_diff < 7200:
+         return "an hour ago"
+      if second_diff < 86400:
+         return str(second_diff // 3600) + " hours ago"
+   if day_diff == 1:
+      return "Yesterday"
+   if day_diff < 7:
+      return str(day_diff) + " days ago"
+   if day_diff < 31:
+      return str(day_diff // 7) + " weeks ago"
+   if day_diff < 365:
+      return str(day_diff // 30) + " months ago"
+   return in_time.strftime(format)
+
 
 @app.template_filter()
 def formatUnixTime(value):
