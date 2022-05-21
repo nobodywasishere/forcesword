@@ -35,6 +35,10 @@ i.fa {
     margin-right: 0.5rem;
 }
 
+pre {
+    padding: 1rem;
+}
+
 @media (min-width: 768px) {
     .container-fill {
         padding-left: 1rem !important;

@@ -3,14 +3,22 @@
 {% block proj_content %}
 
 <div class="container-fluid container-fill">
+    
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/p/{{ proj['shortname'] }}/discussion/">Discussion</a></li>
+        <li class="breadcrumb-item"><a href="/p/{{ proj['shortname'] }}/discussion/{{ forum['forum']['shortname'] }}/">{{ forum['forum']['name'] }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ sub['topic']['subject'] }}</li>
+    </ol>
+</nav>
 
 <h3 class="mb-4">{{ sub['topic']['subject'] }}</h3>
 
 {%- for reply in sub['topic']['posts'] -%}
-<div id="{{ reply['slug'] }}" class="card mb-4" style="margin-left: {{ 1.5*reply['slug'].count('/') }}rem;">
+<div id="{{ reply['slug'] }}" class="card mb-4" style="margin-left: {{ reply['slug'].count('/') }}rem;">
     <div class="card-header">
-        <p class="mx-2 mb-0">
-            {{ reply['author' ] }} - {{ reply['timestamp'] | formatDate(humanize=True) }}
+        <p class="mb-0">
+            <a href="/u/{{ reply['author' ] }}/">{{ reply['author' ] }}</a> - {{ reply['timestamp'] | formatDate(humanize=True) }}
             <span style="float:right;">
                 <a class="text-reset" href="#" data-bs-toggle="tooltip" title="Reply (not implemented)">
                     <i class="fa fa-reply" aria-hidden="true"></i>
@@ -21,40 +29,9 @@
             </span>
         </p>
     </div>
-    <div class="card-body mx-2">
+    <div class="card-body">
         {%- set ns = namespace(pre=False, check_next=False) -%}
-        {%- for line in reply['text'].splitlines() -%}
-
-            {%- if ns.check_next and ns.pre -%}
-                {%- if line[:2] == "::" -%}
-                    <pre><code class="hljs language-{{ line[2:].replace(':', '') }}">
-                {%- else -%}
-                    <pre><code class="hljs language-plaintext">
-                    {{ line }}&#10;
-                {%- endif -%}
-                {%- set ns.check_next = False -%}
-            {%- else -%}
-                    
-                {%- if line[:3] == "~~~" -%}
-                    {%- if ns.pre -%}
-                        </code></pre>
-                    {%- else -%}
-                        {%- set ns.check_next = True -%}
-                    {%- endif -%}
-                
-                    {%- set ns.pre = not ns.pre -%}
-                {%- endif -%}
-                
-                {%- if line[:3] != "~~~" -%}
-                    {%- if ns.pre -%}
-                        {{ line }}&#10;
-                    {%- else -%}
-                        {{ line | formatMarkdown | safe }}
-                    {%- endif -%}
-                {%- endif -%}
-            {%- endif -%}
-                
-        {%- endfor -%}
+        {{ reply['text'] | formatMarkdown | safe }}
         {%- if reply['last_edited'] -%}
         <hr>
         <small>Last edited {{ reply['last_edited'] | formatDate(humanize=True) }}</small>
