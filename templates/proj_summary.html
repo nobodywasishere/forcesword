@@ -82,10 +82,10 @@
         <section class="mb-5">
             {%- if sub["screenshots"] -%}
             <div id="carouselExampleControls" class="carousel carousel-dark slide mb-4" data-bs-ride="carousel">
-                <div class="carousel-inner">
+                <div class="carousel-inner d-flex align-items-center" style="height: 20rem;">
                     {%- for proj_cap in sub['screenshots'] -%}
                     <div class="carousel-item {% if loop.first %}active{% endif %}" data-bs-interval="5000">
-                        <img src="{{ proj_cap['url'] }}" class="d-block mx-auto" style="height: 20rem;">
+                        <img src="{{ proj_cap['url'] }}" class="d-block mx-auto my-auto" style="max-height: 20rem; max-width: 100%;">
                     </div>
                     {%- endfor -%}
                 </div>

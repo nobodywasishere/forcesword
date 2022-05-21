@@ -156,10 +156,10 @@ def getProfileImageUrl(user, cache=True):
       # search for both gravatar and allura profile pictures
       search = re.search(r'https:\/\/secure\.gravatar\.com\/avatar/[a-z0-9]+', content)
       if search:
-         icon_url = search.group()
+         icon_url = search.group() + '?s=180'
       search = re.search(rf'https:\/\/a\.fsdn\.com\/allura\/u\/{user}/user_icon', content)
       if search:
-         icon_url = search.group()
+         icon_url = search.group() + '?w=180'
 
       prof_image_cache[user] = {
          'icon_url': icon_url,
