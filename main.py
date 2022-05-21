@@ -94,7 +94,7 @@ def viewProject(proj, sub='summary'):
 def formatProjJson(proj, skip_images=False):
    if 'tools' in proj:
       tools = {}
-      first_tools = ['summary']#, 'files', 'wiki', 'bugs']
+      first_tools = ['summary', 'discussion']#, 'files', 'wiki', 'bugs']
       exclude_tools = ['activity', 'reviews', 'support']
 
       for f in first_tools:

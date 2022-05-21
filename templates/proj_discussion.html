@@ -4,8 +4,31 @@
 
 
 {%- for forum in sub['forums'] -%}
-<h4>{{ forum["name"] }}</h4>
-<h5>{{ forum["description"] }}</h5>
+<!-- <h4>{{ forum["name"] }}</h4> -->
+<!-- <h5>{{ forum["description"] }}</h5> -->
+
+<ol class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-start mx-3 my-2 p-4">
+        <div class="me-auto">
+            <h4 class="fw-bold">
+                <a href="/p/{{ proj['shortname'] }}/discussion/{{ forum['shortname'] }}/"
+                    class="text-decoration-none">
+                    {{ forum["name"] }}
+                </a>
+            </h4>
+            <p class="fs-5">{{ forum["description"] }}</p>
+            {%- if forum['last_post'] -%}
+            <small>Last post 
+                <a href="/p/{{ proj['shortname'] }}/discussion/{{ forum['shortname'] }}/{{ forum['last_post']['thread_id'] }}/?limit=25#{{ forum['last_post']['slug'] }}">{{ forum['last_post']['subject'] }}</a>
+                by 
+                <a href="/u/{{ forum['last_post']['author'] }}/">{{ forum['last_post']['author'] }}</a>
+                {{ forum['last_post']['timestamp'] | formatDate(humanize=True) }}</small>
+            {%- endif -%}
+        </div>
+        <span class="badge bg-primary rounded-pill">{{ forum['num_topics'] }} topics</span>
+    </li>
+</ol>
+
 {%- endfor -%}
 
 <!-- {{ sub }} -->
