@@ -12,6 +12,7 @@ import atexit
 import pickle
 import subprocess as sp
 from dateutil import parser as dtparser
+import markdown2
 
 app = Flask(__name__)
 
@@ -53,10 +54,9 @@ def about():
 def favicon():
    return ''
 
-@app.route('/projects/<proj>/')
-@app.route('/projects/<proj>/<sub>/')
+@app.route('/projects/<path:proj>/')
 def redirectLongProj(proj, sub='summary'):
-   return redirect(f'/p/{proj}/{sub}/')
+   return redirect(f'/p/{proj}/')
 
 @app.route('/p/<proj>/summary/')
 def redirectProjSummary(proj):
@@ -125,7 +125,89 @@ def formatProjJson(proj, skip_images=False):
    if 'short_description' in proj:
       proj['short_description'] = proj['short_description'].splitlines()
 
+   if 'topic' in proj and 'posts' in proj['topic']:
+      posts = proj['topic']['posts']
+      posts = sortThread(posts)
+      proj['topic']['posts'] = posts
+
+      for post in posts:
+         print(post['slug'])
+
    return proj
+
+def sortThread(posts):
+   # magical recursive code i wrote half asleep that I probably won't understand tomorrow
+   # sorts the threaded posts properly, assuming they're all in timestamp order
+   # for p in posts:
+   #    print(p['slug'])
+   # print()
+   min_slug = min([len(post['slug']) for post in posts])
+   top = [post for post in posts if len(post['slug']) == min_slug]
+   groups = {key['slug']: [] for key in top}
+
+   for post in posts:
+      if post in top or post['slug'] in groups.keys():
+         continue
+      if post['slug'][:min_slug] not in groups.keys():
+         print(f"Adding missing key, {post['slug'][:min_slug+1]}")
+         for post_i in range(len(posts)):
+            if posts[post_i]['slug'].startswith(post['slug'][:min_slug+1]):
+               print(f"Replacing {post['slug'][:min_slug+1]} in {posts[post_i]['slug']}")
+               posts[post_i]['slug'] = posts[post_i]['slug'].replace(post['slug'][:min_slug+1], '')
+         groups[post['slug']] = []
+         top.append(post)
+         top = sorted(top, key=lambda d: d['timestamp'])
+
+         # groups[post['slug']].append(post)
+
+      else:
+         groups[post['slug'][:min_slug]].append(post)
+
+   for g in groups.keys():
+      if groups[g] != []:
+         groups[g] = sortThread(groups[g])
+
+   out = []
+   for t in top:
+      out.append(t)
+      for g in groups[t['slug']]:
+         out.append(g)
+
+   return out
+
+@app.route('/p/<proj>/discussion/<forum>/')
+def viewForum(proj, forum):
+
+   sum_resp = rq.get(f"{SF_API_URL}/p/{proj}")
+   if 400 <= sum_resp.status_code < 500:
+      return f'Error {sum_resp.status_code}'
+   else:
+      sum_json = formatProjJson(sum_resp.json())
+
+   sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}")
+   if 200 <= sub_resp.status_code < 300:
+      sub_json = formatProjJson(sub_resp.json())
+   else:
+      sub_json = None
+   
+   return render_template('proj_discussion_forum.html', proj=sum_json, sub_name='discussion', sub=sub_json)
+
+@app.route('/p/<proj>/discussion/<forum>/thread/<thread>/')
+def viewForumThread(proj, forum, thread):
+
+   sum_resp = rq.get(f"{SF_API_URL}/p/{proj}")
+   if 400 <= sum_resp.status_code < 500:
+      return f'Error {sum_resp.status_code}'
+   else:
+      sum_json = formatProjJson(sum_resp.json())
+
+   sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}/thread/{thread}")
+   if 200 <= sub_resp.status_code < 300:
+      sub_json = formatProjJson(sub_resp.json())
+   else:
+      sub_json = None
+
+   return render_template('proj_discussion_thread.html', proj=sum_json, sub_name='discussion', sub=sub_json)
 
 @app.route('/u/<user>/')
 def redirectToUserProf(user):
@@ -222,6 +304,7 @@ atexit.register(saveProfImageCache)
 
 @app.template_filter()
 def formatDate(value, format="%b %d, %Y", humanize=False):
+   print(f"{value}")
    if humanize:
       return humanizeDate(dtparser.parse(str(value)))
    else:
@@ -269,6 +352,10 @@ def formatUnixTime(value):
 @app.template_filter()
 def formatURL(value):
    return value.replace('https://', '').replace('http://', '')
+
+@app.template_filter()
+def formatMarkdown(line):
+   return markdown2.markdown(line).replace('<code>', '<code class="hljs">')
 
 if __name__ == '__main__':
    app.run()

@@ -1,0 +1,70 @@
+{% extends 'proj.html' %}
+
+{% block proj_content %}
+
+<div class="container-fluid container-fill">
+
+<h3 class="mb-4">{{ sub['topic']['subject'] }}</h3>
+
+{%- for reply in sub['topic']['posts'] -%}
+<div id="{{ reply['slug'] }}" class="card mb-4" style="margin-left: {{ 1.5*reply['slug'].count('/') }}rem;">
+    <div class="card-header">
+        <p class="mx-2 mb-0">
+            {{ reply['author' ] }} - {{ reply['timestamp'] | formatDate(humanize=True) }}
+            <span style="float:right;">
+                <a class="text-reset" href="#" data-bs-toggle="tooltip" title="Reply (not implemented)">
+                    <i class="fa fa-reply" aria-hidden="true"></i>
+                </a>
+                <a class="text-reset" href="#{{ reply['slug'] }}" data-bs-toggle="tooltip" title="Share">
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                </a>
+            </span>
+        </p>
+    </div>
+    <div class="card-body mx-2">
+        {%- set ns = namespace(pre=False, check_next=False) -%}
+        {%- for line in reply['text'].splitlines() -%}
+
+            {%- if ns.check_next and ns.pre -%}
+                {%- if line[:2] == "::" -%}
+                    <pre><code class="hljs language-{{ line[2:].replace(':', '') }}">
+                {%- else -%}
+                    <pre><code class="hljs language-plaintext">
+                    {{ line }}&#10;
+                {%- endif -%}
+                {%- set ns.check_next = False -%}
+            {%- else -%}
+                    
+                {%- if line[:3] == "~~~" -%}
+                    {%- if ns.pre -%}
+                        </code></pre>
+                    {%- else -%}
+                        {%- set ns.check_next = True -%}
+                    {%- endif -%}
+                
+                    {%- set ns.pre = not ns.pre -%}
+                {%- endif -%}
+                
+                {%- if line[:3] != "~~~" -%}
+                    {%- if ns.pre -%}
+                        {{ line }}&#10;
+                    {%- else -%}
+                        {{ line | formatMarkdown | safe }}
+                    {%- endif -%}
+                {%- endif -%}
+            {%- endif -%}
+                
+        {%- endfor -%}
+        {%- if reply['last_edited'] -%}
+        <hr>
+        <small>Last edited {{ reply['last_edited'] | formatDate(humanize=True) }}</small>
+        {%- endif -%}
+    </div>
+</div>
+{%- endfor -%}
+
+</div>
+
+<!-- {{ sub }} -->
+
+{% endblock %}
