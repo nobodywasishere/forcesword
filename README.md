@@ -6,8 +6,9 @@ WIP alternative frontend for [SourceForge](https://sourceforge.net/) and other [
 
 Entire site:
 
-- [ ] Use sqlite3 database for caching user profile icons (instead of pkl file)
 - [ ] Login/authentication
+- [ ] Home page load faster (prefetch over a set period?)
+- [x] Use sqlite3 database for caching user profile icons (instead of pkl file) (kind of, added a lock file to prevent corruption)
 - [x] Home page with a list of some projects, etc
 - [x] About page
 
@@ -15,8 +16,8 @@ Summary page:
 
 - [ ] Download button / [stats](https://sourceforge.net/p/forge/documentation/Download%20Stats%20API/) (`/projects/<proj>/files/stats/json?start_date=2014-10-29&end_date=2014-11-04`)
 - [ ] Sliding navbar instead of wrapping
-- [ ] Relative time (i.e., `3 days ago`) for dates/times under 1 month
 - [ ] Screenshot modal
+- [x] Relative time (i.e., `3 days ago`) for dates/times under 1 month
 - [x] Recent Activity ellipse cutoff on one line
 - [x] Developer icons in a table instead of a list
 - [x] More verbose recent activity pane
@@ -25,20 +26,32 @@ Summary page:
 
 User profile page:
 
-- [ ] Better profile image layout / position
+- [x] Better profile image layout / position
 - [x] Personal data
 - [x] List of projects
 - [x] Skills
 - [x] Recent activity (may have to resort to rss feed, `/u/<user>/profile/feed.rss`)
 
+Discussion / thread pages:
+
+- [ ] User profile icons
+- [ ] Emoji replies (if possible, not shown on API)
+- [ ] Block quote markdown support
+- [ ] Collapse replies
+- [ ] Reply / text input box
+- [ ] Vertical lines to align replies (i.e. reddit, hn)
+- [ ] Thread metadata (created date, author, forum, last updated)
+- [ ] Pagination in both discussion page and thread page
+- [ ] Show attachments
+
 New pages:
 
 - [ ] Wiki
-- [ ] Discussion
 - [ ] Bugs
 - [ ] News
 - [ ] Files (may have to resort to rss feed, `/p/<proj>/rss?path=/<path>`)
 - [ ] Code (may have to have backends for different vcs, no idea how to do this, one of the most important parts)
+- [x] Discussion
 
 ## License
 
