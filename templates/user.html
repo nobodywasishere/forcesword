@@ -23,9 +23,13 @@
                 </div>
             </div>
             <ul class="list-group list-group-flush mb-4">
-                <li class="list-group-item">Joined {{ user['joined'] | formatDate }}</li>
+                <li class="list-group-item">
+                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    Joined {{ user['joined'] | formatDate }}
+                </li>
                 {%- if user['localization']['country'] -%}
                 <li class="list-group-item">
+                    <i class="fa fa-location-arrow" aria-hidden="true"></i>
                     {% if user['localization']['city'] %}
                     {{ user['localization']['city'] }},
                     {% endif %}
@@ -34,13 +38,17 @@
                 {%- endif -%}
                 {%- for webpage in user['webpages'] -%}
                 <li class="list-group-item">
-                    <a href="">{{ webpage | formatURL }}
-
+                    <i class="fa fa-link" aria-hidden="true"></i>
+                    <a href="{{ webpage }}">
+                        {{ webpage | formatURL }}
                     </a>
                 </li>
                 {%- endfor -%}
                 {%- if user['skypeaccount'] -%}
-                <li class="list-group-item">Skype: {{ user['skypeaccount']}}</li>
+                <li class="list-group-item">
+                    <i class="fa fa-skype" aria-hidden="true"></i>
+                    {{ user['skypeaccount']}}
+                </li>
                 {%- endif -%}
             </ul>
             {%- if user['skills'] -%}

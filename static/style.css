@@ -31,6 +31,10 @@ html {
     text-overflow: ellipsis;
 }
 
+i.fa {
+    margin-right: 0.5rem;
+}
+
 @media (min-width: 768px) {
     .container-fill {
         padding-left: 1rem !important;

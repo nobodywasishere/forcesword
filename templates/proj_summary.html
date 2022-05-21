@@ -3,57 +3,48 @@
 {% block proj_content %}
 
 <div class="col-md-4">
-    <div class="card mb-4">
-        <div class="card-header">Information</div>
-        <div class="card-body">
-            <table class="table table-sm">
-                <tr>
-                    <td>Status</td>
-                    <td>{{ proj['status'] }}</td>
-                </tr>
-                <tr>
-                    <td>Created</td>
-                    <td>{{ proj['creation_date'] }}</td>
-                </tr>
-                {%- if proj['categories']['language'] -%}
-                <tr>
-                    <td>Language</td>
-                    <td>
-                        {%- for proj_lang in proj['categories']['language'] -%}
-                        {{ proj_lang['fullname'] }}{% if not loop.last %}, {% endif %}
-                        {%- endfor -%}
-                    </td>
-                </tr>
-                {%- endif -%}
-                <tr>
-                    <td>Homepage</td>
-                    <td>
-                        <a href="{{ proj['external_homepage'] }}">
-                            Link
-                        </a>
-                    </td>
-                </tr>
-                {%- for proj_socnet in proj['socialnetworks'] -%}
-                {%- if proj_socnet['accounturl'] -%}
-                <tr>
-                    <td>{{ proj_socnet['socialnetwork'] }}</td>
-                    <td>
-                        <a href="{{ proj_socnet['accounturl'] }}">
-                            Link
-                        </a>
-                    </td>
-                </tr>
-                {%- endif -%}
-                {%- endfor -%}
-                {%- for proj_licn in proj['categories']['license'] -%}
-                <tr>
-                    <td>License</td>
-                    <td>{{ proj_licn['fullname'] }}</td>
-                </tr>
-                {%- endfor -%}
-            </table>
-        </div>
-    </div>
+    <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item">
+            <i class="fa fa-info" aria-hidden="true"></i>
+            Status {{ proj['status'] }}
+        </li>
+        <li class="list-group-item">
+            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+            Created {{ proj['creation_date'] }}
+        </li>
+        {%- if proj['categories']['language'] -%}
+        <li class="list-group-item">
+            <i class="fa fa-code" aria-hidden="true"></i>
+            {%- for proj_lang in proj['categories']['language'] -%}
+            {{ proj_lang['fullname'] }}{% if not loop.last %}, {% endif %}
+            {%- endfor -%}
+        </li>
+        {%- endif -%}
+        {%- if proj['external_homepage'] -%}
+        <li class="list-group-item">
+            <i class="fa fa-link" aria-hidden="true"></i>
+            <a href="{{ proj['external_homepage'] }}">
+                {{ proj['external_homepage'] | formatURL }}
+            </a>
+        </li>
+        {%- endif -%}
+        {%- for proj_socnet in proj['socialnetworks'] -%}
+        {%- if proj_socnet['accounturl'] -%}
+        <li class="list-group-item">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <a href="{{ proj_socnet['accounturl'] }}">
+                {{ proj_socnet['socialnetwork'] }}
+            </a>
+        </li>
+        {%- endif -%}
+        {%- endfor -%}
+        {%- for proj_licn in proj['categories']['license'] -%}
+        <li class="list-group-item">
+            <i class="fa fa-balance-scale" aria-hidden="true"></i>
+            {{ proj_licn['fullname'] }}
+        </li>
+        {%- endfor -%}
+    </ul>
     <div class="card mb-4">
         <div class="card-header">Developers</div>
         <div class="card-body wrapping_list">
