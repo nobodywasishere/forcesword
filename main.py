@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 from flask import Flask, render_template, redirect
 import requests as rq
 from pprint import pprint
@@ -18,6 +19,7 @@ SF_WEB_URL = "https://sourceforge.net"
 SF_API_URL = f"{SF_WEB_URL}/rest"
 
 PROF_IMAGE_CACHE_FILE = 'prof-image-cache.pkl'
+PROF_IMAGE_CACHE_LOCK = 'prof-image-cache.pkl.lock'
 
 @app.context_processor
 def injectMetadata():
@@ -179,8 +181,10 @@ def saveProfImageCache():
 
    if Path(PROF_IMAGE_CACHE_FILE).exists():
 
+      profImageCacheLock()
       with open(PROF_IMAGE_CACHE_FILE, 'rb') as f:
          prof_image_cache_old = pickle.load(f)
+      profImageCacheUnlock()
 
       # Merge the old and new caches
       for key, val in prof_image_cache_old.items():
@@ -190,8 +194,29 @@ def saveProfImageCache():
          else:
             prof_image_cache[key] = val
 
+   profImageCacheLock()
    with open(PROF_IMAGE_CACHE_FILE, 'wb') as f:
       pickle.dump(prof_image_cache, f)
+   profImageCacheUnlock()
+
+def profImageCacheLock():
+   # Lock the file, not a perfect solution but better than nothing
+   while True:
+      if Path(PROF_IMAGE_CACHE_LOCK).exists():
+         time.sleep(0.1)
+         continue
+      try:
+         Path(PROF_IMAGE_CACHE_LOCK).touch(exist_ok=False)
+         print('LOCKED')
+         return
+      except FileExistsError:
+         time.sleep(0.1)
+         continue
+
+def profImageCacheUnlock():
+   # Unlock the file
+   Path(PROF_IMAGE_CACHE_LOCK).unlink()
+   print('UNLOCKED')
 
 atexit.register(saveProfImageCache)
 
