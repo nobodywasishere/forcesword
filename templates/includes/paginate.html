@@ -1,0 +1,61 @@
+{% block body %}
+
+<div class="d-flex align-items-center">
+    <nav aria-label="Page navigation example" class="mx-auto">
+        <ul class="pagination">
+            <li class="page-item {% if sub['page'] == 0 %}disabled{%- endif -%}">
+                <a class="page-link" href="./?page={{ sub['page'] - 1}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            {%- if num_pages > 10 -%}
+
+                {%- if sub['page'] > 2 -%}
+                    <li class="page-item">
+                        <a class="page-link" href="./?page=0">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link disabled">...</a>
+                    </li>
+                {%- endif -%}
+
+                {%- for page in range(sub['page'] - 2, sub['page'] + 3) -%}
+                    {%- if page >= 0 and page < num_pages -%}
+                    <li class="page-item {% if sub['page'] == page %}active{% endif %}">
+                        <a class="page-link" href="./?page={{ page }}">{{ page + 1 }}</a>
+                    </li>
+                    {%- endif -%}
+                {%- endfor -%}
+
+                {%- if sub['page'] < num_pages - 2 -%}
+                    <li class="page-item">
+                        <a class="page-link disabled">...</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="./?page={{ num_pages - 1 }}">{{ num_pages }}</a>
+                    </li>
+                {%- endif -%}
+
+            {%- else -%}
+
+                {%- for page in range(num_pages) -%}
+                {%- if page >= 0 -%}
+                <li class="page-item {% if sub['page'] == page %}active{% endif %}">
+                    <a class="page-link" href="./?page={{ page }}">{{ page + 1 }}</a>
+                </li>
+                {%- endif -%}
+                {%- endfor -%}
+
+            {%- endif -%}
+
+            <li class="page-item {% if sub['page'] == (num_pages - 1) %}disabled{%- endif -%}">
+                <a class="page-link" href="./?page={{ sub['page'] + 1 }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}

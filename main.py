@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
+from math import ceil
 import time
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 import requests as rq
 from pprint import pprint
 from pathlib import Path
@@ -223,14 +224,18 @@ def viewForum(proj, forum):
     else:
         sum_json = formatProjJson(sum_resp.json())
 
-    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}")
+    page = request.args.get('page')
+
+    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}{('?page=' + page) if page is not None else ''}")
     if 200 <= sub_resp.status_code < 300:
         sub_json = formatProjJson(sub_resp.json())
+        num_pages = ceil(sub_json['count'] / sub_json['limit'])
     else:
         sub_json = None
+        num_pages = 0
 
     return render_template(
-        "proj_discussion_forum.html", proj=sum_json, sub_name="discussion", sub=sub_json
+        "proj_discussion_forum.html", proj=sum_json, sub_name="discussion", sub=sub_json, num_pages=num_pages
     )
 
 
@@ -249,11 +254,15 @@ def viewForumThread(proj, forum, thread):
     else:
         frm_json = None
 
-    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}/thread/{thread}")
+    page = request.args.get('page')
+
+    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}/thread/{thread}?limit=500{('&page=' + page) if page is not None else ''}")
     if 200 <= sub_resp.status_code < 300:
         sub_json = formatProjJson(sub_resp.json())
+        num_pages = ceil(sub_json['count'] / sub_json['limit'])
     else:
         sub_json = None
+        num_pages = 0
 
     return render_template(
         "proj_discussion_thread.html",
@@ -262,6 +271,7 @@ def viewForumThread(proj, forum, thread):
         sub=sub_json,
         forum=frm_json,
         forum_name=forum,
+        num_pages=num_pages
     )
 
 
