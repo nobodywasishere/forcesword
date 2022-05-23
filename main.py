@@ -95,7 +95,7 @@ def viewProject(proj, sub="summary"):
 
     if sub != "summary":
         if sub == "activity":
-            query = "?limit=500"
+            query = "?limit=100"
         else:
             query = ""
         sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/{sub}/{query}")
