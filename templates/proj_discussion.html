@@ -19,7 +19,7 @@
             <p class="fs-5">{{ forum["description"] }}</p>
             {%- if forum['last_post'] -%}
             <small>Last post 
-                <a href="/p/{{ proj['shortname'] }}/discussion/{{ forum['shortname'] }}/thread/{{ forum['last_post']['thread_id'] }}/?limit=25#{{ forum['last_post']['slug'] }}">{{ forum['last_post']['subject'] }}</a>
+                <a href="/p/{{ proj['shortname'] }}/discussion/{{ forum['shortname'] }}/thread/{{ forum['last_post']['thread_id'] }}/#{{ forum['last_post']['slug'] }}">{{ forum['last_post']['subject'] }}</a>
                 by 
                 <a href="/u/{{ forum['last_post']['author'] }}/">{{ forum['last_post']['author'] }}</a>
                 {{ forum['last_post']['timestamp'] | formatDate(humanize=True) }}

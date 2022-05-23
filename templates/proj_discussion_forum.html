@@ -2,12 +2,14 @@
 
 {% block proj_content %}
 
+<div class="px-3">
+
 <h3>{{ sub['forum']['name'] }}</h3>
 <p class="fs-5 mb-3">{{ sub['forum']['description'] }}</p>
 
 {% include 'includes/paginate.html' %}
 
-<table class="table table-striped table-responsive-sm">
+<table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Topic</th>
@@ -17,6 +19,7 @@
         </tr>
     </thead>
     {%- for topic in sub['forum']['topics'] -%}
+    {%- if topic['last_post'] -%}
     <tr>
         <td>
             <a class="text-decoration-none" href="/p/{{ proj['shortname'] }}/discussion/{{ sub['forum']['shortname'] }}/thread/{{ topic['last_post']['thread_id'] }}/">{{ topic['subject'] }}</a>
@@ -26,16 +29,19 @@
         <td>
             {%- if topic['last_post'] -%}
             <small>
-                By <a href="/u/{{ topic['last_post']['author'] }}/">{{ topic['last_post']['author'] }}</a>
+                <span class="text-nowrap">By <a href="/u/{{ topic['last_post']['author'] }}/">{{ topic['last_post']['author'] }}</a></span>
                 <br>
                 {{ topic['last_post']['timestamp'] | formatDate(humanize=True) }}
             </small>
             {%- endif -%}
         </td>
     </tr>
+    {%- endif -%}
     {%- endfor -%}
 </table>
 
 {% include 'includes/paginate.html' %}
+
+</div>
 
 {% endblock %}

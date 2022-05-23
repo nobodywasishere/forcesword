@@ -23,7 +23,7 @@ SF_API_URL = f"{SF_WEB_URL}/rest"
 PROF_IMAGE_CACHE_FILE = "prof-image-cache.pkl"
 PROF_IMAGE_CACHE_LOCK = "prof-image-cache.pkl.lock"
 
-MARKDOWN_EXTS = ["codehilite", "fenced_code"]
+MARKDOWN_EXTS = ["codehilite", "fenced_code", "mdx_linkify"]
 
 
 @app.context_processor
@@ -94,7 +94,11 @@ def viewProject(proj, sub="summary"):
         sum_json = formatProjJson(sum_resp.json())
 
     if sub != "summary":
-        sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/{sub}")
+        if sub == "activity":
+            query = "?limit=500"
+        else:
+            query = ""
+        sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/{sub}/{query}")
     else:
         sub_resp = sum_resp
     if 200 <= sub_resp.status_code < 300:
@@ -128,7 +132,11 @@ def viewProject(proj, sub="summary"):
 def formatProjJson(proj, skip_images=False):
     if "tools" in proj:
         tools = {}
-        first_tools = ["summary", "discussion"]  # , 'files', 'wiki', 'bugs']
+        first_tools = [
+            "summary",
+            "discussion",
+            "activity",
+        ]  # , 'files', 'wiki', 'bugs']
         exclude_tools = ["activity", "reviews", "support"]
 
         for f in first_tools:
@@ -224,18 +232,24 @@ def viewForum(proj, forum):
     else:
         sum_json = formatProjJson(sum_resp.json())
 
-    page = request.args.get('page')
+    page = request.args.get("page")
 
-    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}{('?page=' + page) if page is not None else ''}")
+    sub_resp = rq.get(
+        f"{SF_API_URL}/p/{proj}/discussion/{forum}{('?page=' + page) if page is not None else ''}"
+    )
     if 200 <= sub_resp.status_code < 300:
         sub_json = formatProjJson(sub_resp.json())
-        num_pages = ceil(sub_json['count'] / sub_json['limit'])
+        num_pages = ceil(sub_json["count"] / sub_json["limit"])
     else:
         sub_json = None
         num_pages = 0
 
     return render_template(
-        "proj_discussion_forum.html", proj=sum_json, sub_name="discussion", sub=sub_json, num_pages=num_pages
+        "proj_discussion_forum.html",
+        proj=sum_json,
+        sub_name="discussion",
+        sub=sub_json,
+        num_pages=num_pages,
     )
 
 
@@ -254,12 +268,14 @@ def viewForumThread(proj, forum, thread):
     else:
         frm_json = None
 
-    page = request.args.get('page')
+    page = request.args.get("page")
 
-    sub_resp = rq.get(f"{SF_API_URL}/p/{proj}/discussion/{forum}/thread/{thread}?limit=500{('&page=' + page) if page is not None else ''}")
+    sub_resp = rq.get(
+        f"{SF_API_URL}/p/{proj}/discussion/{forum}/thread/{thread}?limit=500{('&page=' + page) if page is not None else ''}"
+    )
     if 200 <= sub_resp.status_code < 300:
         sub_json = formatProjJson(sub_resp.json())
-        num_pages = ceil(sub_json['count'] / sub_json['limit'])
+        num_pages = ceil(sub_json["count"] / sub_json["limit"])
     else:
         sub_json = None
         num_pages = 0
@@ -271,7 +287,7 @@ def viewForumThread(proj, forum, thread):
         sub=sub_json,
         forum=frm_json,
         forum_name=forum,
-        num_pages=num_pages
+        num_pages=num_pages,
     )
 
 
@@ -439,6 +455,21 @@ def formatURL(value):
 @app.template_filter()
 def formatMarkdown(block):
     return markdown.markdown(block, extensions=MARKDOWN_EXTS)
+
+
+# https://stackoverflow.com/a/1094933/9047818
+@app.template_filter()
+def formatBytes(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f} {unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f} Yi{suffix}"
+
+
+@app.template_filter()
+def formatUrlFilename(url):
+    return url.split("/")[-1].replace("%20", " ")
 
 
 if __name__ == "__main__":

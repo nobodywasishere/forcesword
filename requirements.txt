@@ -4,3 +4,4 @@ feedparser
 dateutil
 markdown
 pygments
+mdx_linkify

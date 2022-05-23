@@ -19,9 +19,16 @@
 {%- for reply in sub['topic']['posts'] -%}
 <div id="{{ reply['slug'] }}" class="card mb-4" style="margin-left: {{ reply['slug'].count('/') }}rem;">
     <div class="card-header">
-        <p class="mb-0">
-            <a href="/u/{{ reply['author' ] }}/">{{ reply['author' ] }}</a> - {{ reply['timestamp'] | formatDate(humanize=True) }}
-            <span style="float:right;">
+        <p class="mb-0 p-1">
+            <a href="/u/{{ reply['author' ] }}/" class="text-decoration-none">
+                {%- if reply['author_icon_url'] -%}
+                <img src="{{ reply['author_icon_url'] }}" style="width: 2rem;" class="border my-0 me-2"/>
+                {%- else -%}
+                <img src="/static/icon.png" style="width: 2rem;" class="border my-0"/>
+                {% endif %}
+                {{ reply['author' ] }}
+            </a> - {{ reply['timestamp'] | formatDate(humanize=True) }}
+            <span class="text-decoration-none" style="float:right;">
                 <a class="text-reset" href="#" data-bs-toggle="tooltip" title="Reply (not implemented)">
                     <i class="fa fa-reply" aria-hidden="true"></i>
                 </a>
@@ -32,11 +39,24 @@
         </p>
     </div>
     <div class="card-body">
-        {%- set ns = namespace(pre=False, check_next=False) -%}
-        {{ reply['text'] | formatMarkdown | safe }}
+        <div class="markdown">
+            {{ reply['text'] | formatMarkdown | safe }}
+        </div>
         {%- if reply['last_edited'] -%}
         <hr>
-        <small>Last edited {{ reply['last_edited'] | formatDate(humanize=True) }}</small>
+        <small class="mb-4">Last edited {{ reply['last_edited'] | formatDate(humanize=True) }}</small>
+        {%- endif -%}
+        {%- if reply['attachments'] -%}
+        <div class="row" style="margin-left: -0.25rem; margin-top: 0.5rem;">
+            {%- for attch in reply['attachments'] -%}
+            <div class="col-auto border m-1 px-3 py-2">
+                <a href="{{ attch['url'] }}" class="text-decoration-none" target="_blank">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </a>
+                {{ attch['url'] | formatUrlFilename }} ({{ attch['bytes'] | formatBytes }})
+            </div>
+            {%- endfor -%}
+        </div>
         {%- endif -%}
     </div>
 </div>

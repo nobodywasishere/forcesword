@@ -39,6 +39,12 @@ pre {
     padding: 1rem;
 }
 
+.markdown img {
+    max-width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 @media (min-width: 768px) {
     .container-fill {
         padding-left: 1rem !important;
